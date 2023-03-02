@@ -1,17 +1,22 @@
+import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserInput, UpdateUserInput } from 'src/types/graphql';
 import { UserService } from './user.service';
+import * as bcrypt from 'bcrypt';
 
 @Resolver('User')
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Mutation('createUser')
-  create(@Args('createUserInput') createUserInput: CreateUserInput) {
+  async create(@Args('createUserInput') createUserInput: CreateUserInput) {
+    createUserInput.password = await bcrypt.hash(createUserInput.password, 10);
     return this.userService.create(createUserInput);
   }
 
-  @Query('user')
+  @Query('users')
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.userService.findAll();
   }

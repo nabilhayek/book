@@ -8,6 +8,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export class LoginInput {
+    username: string;
+    password: string;
+}
+
 export class CreateUserInput {
     name: string;
     email: string;
@@ -21,6 +26,27 @@ export class UpdateUserInput {
     password?: Nullable<string>;
 }
 
+export class UserLoginResponse {
+    id: string;
+    name: string;
+    email: string;
+}
+
+export class LoginResponse {
+    access_token: string;
+    user: UserLoginResponse;
+}
+
+export abstract class IMutation {
+    abstract login(loginInput: LoginInput): LoginResponse | Promise<LoginResponse>;
+
+    abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
+
+    abstract updateUser(updateUserInput: UpdateUserInput): User | Promise<User>;
+
+    abstract removeUser(id: string): Nullable<User> | Promise<Nullable<User>>;
+}
+
 export class User {
     id: string;
     name: string;
@@ -32,14 +58,6 @@ export abstract class IQuery {
     abstract users(): Nullable<User>[] | Promise<Nullable<User>[]>;
 
     abstract user(id: string): Nullable<User> | Promise<Nullable<User>>;
-}
-
-export abstract class IMutation {
-    abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
-
-    abstract updateUser(updateUserInput: UpdateUserInput): User | Promise<User>;
-
-    abstract removeUser(id: string): Nullable<User> | Promise<Nullable<User>>;
 }
 
 type Nullable<T> = T | null;
