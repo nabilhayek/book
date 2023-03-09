@@ -19,6 +19,15 @@ export class RolesGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const requireRoles = this.reflector.getAllAndOverride<Role[]>('roles', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (!requireRoles) {
+      return true;
+    }
+
     const ctx = GqlExecutionContext.create(context);
     const request = ctx.getContext().req;
     const jwtFromHeader = ExtractJwt.fromAuthHeaderAsBearerToken()(request);
@@ -27,11 +36,6 @@ export class RolesGuard implements CanActivate {
     const { roles: userRoles } = await this.AuthService.decodeAccessToken(
       jwtFromHeader,
     );
-
-    const requireRoles = this.reflector.getAllAndOverride<Role[]>('roles', [
-      context.getHandler(),
-      context.getClass(),
-    ]);
 
     return requireRoles.some((role) => userRoles.includes(role));
   }

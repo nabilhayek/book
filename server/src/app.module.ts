@@ -9,10 +9,17 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { GqlThrottlerGuard } from './gql-throttler.guard';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
+      cors: {
+        origin: ['http://localhost:3000', 'https://studio.apollographql.com/'],
+        credentials: true,
+      },
       driver: ApolloDriver,
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault],
@@ -25,8 +32,18 @@ import { AuthModule } from './auth/auth.module';
     PrismaModule,
     UserModule,
     AuthModule,
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 4000,
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: GqlThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
