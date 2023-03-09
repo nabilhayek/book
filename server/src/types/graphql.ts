@@ -26,7 +26,7 @@ export class CreateUserInput {
     name: string;
     email: string;
     password: string;
-    role: Role;
+    roles?: Nullable<Nullable<Role>[]>;
     refresh_token?: Nullable<string>;
 }
 
@@ -35,7 +35,7 @@ export class UpdateUserInput {
     name?: Nullable<string>;
     email?: Nullable<string>;
     password?: Nullable<string>;
-    role?: Nullable<Role>;
+    roles?: Nullable<Nullable<Role>[]>;
     refresh_token?: Nullable<string>;
 }
 
@@ -73,7 +73,7 @@ export class User {
     name: string;
     email: string;
     password: string;
-    role: Role;
+    roles: Nullable<Role>[];
     refresh_token?: Nullable<string>;
 }
 

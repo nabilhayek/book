@@ -1,7 +1,8 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { CreateUserInput, UpdateUserInput } from 'src/types/graphql';
+import { CreateUserInput, Role, UpdateUserInput } from 'src/types/graphql';
 import { UserService } from './user.service';
 import * as bcrypt from 'bcrypt';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Resolver('User')
 export class UserResolver {
@@ -14,6 +15,7 @@ export class UserResolver {
   }
 
   @Query('users')
+  @Roles(Role.ADMIN)
   findAll() {
     return this.userService.findAll();
   }

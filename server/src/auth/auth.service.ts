@@ -48,6 +48,13 @@ export class AuthService {
     return refresh_token;
   }
 
+  async decodeAccessToken(token: string) {
+    const decoded = await this.jwtService.verifyAsync(token, {
+      secret: process.env.ACCESS_TOKEN_SECRET,
+    });
+    return decoded;
+  }
+
   async login(user: UserLoginResponse) {
     const access_token = await this.generateAccessToken(user);
     const refresh_token = await this.generateRefreshToken(user);
