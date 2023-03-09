@@ -8,37 +8,58 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export enum Role {
+    ADMIN = "ADMIN",
+    USER = "USER"
+}
+
 export class LoginInput {
     username: string;
     password: string;
+}
+
+export class RefreshInput {
+    userId: string;
 }
 
 export class CreateUserInput {
     name: string;
     email: string;
     password: string;
+    role: Role;
+    refresh_token?: Nullable<string>;
 }
 
 export class UpdateUserInput {
-    id: string;
+    id?: Nullable<string>;
     name?: Nullable<string>;
     email?: Nullable<string>;
     password?: Nullable<string>;
+    role?: Nullable<Role>;
+    refresh_token?: Nullable<string>;
 }
 
 export class UserLoginResponse {
     id: string;
     name: string;
     email: string;
+    refresh_token?: Nullable<string>;
 }
 
 export class LoginResponse {
     access_token: string;
+    refresh_token: string;
     user: UserLoginResponse;
+}
+
+export class RefreshResponse {
+    access_token: string;
 }
 
 export abstract class IMutation {
     abstract login(loginInput: LoginInput): LoginResponse | Promise<LoginResponse>;
+
+    abstract refresh(refreshInput: RefreshInput): RefreshResponse | Promise<RefreshResponse>;
 
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
 
@@ -52,6 +73,8 @@ export class User {
     name: string;
     email: string;
     password: string;
+    role: Role;
+    refresh_token?: Nullable<string>;
 }
 
 export abstract class IQuery {

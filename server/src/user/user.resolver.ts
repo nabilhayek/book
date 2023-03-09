@@ -1,6 +1,4 @@
-import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserInput, UpdateUserInput } from 'src/types/graphql';
 import { UserService } from './user.service';
 import * as bcrypt from 'bcrypt';
@@ -16,7 +14,6 @@ export class UserResolver {
   }
 
   @Query('users')
-  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.userService.findAll();
   }

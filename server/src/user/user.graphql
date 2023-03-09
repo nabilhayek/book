@@ -1,21 +1,32 @@
+enum Role {
+  ADMIN
+  USER
+}
+
 type User {
   id: String!
   name: String!
   email: String!
   password: String!
+  role: Role!
+  refresh_token: String
 }
 
 input CreateUserInput {
   name: String!
   email: String!
   password: String!
+  role: Role!
+  refresh_token: String
 }
 
 input UpdateUserInput {
-  id: String!
+  id: String
   name: String
   email: String
   password: String
+  role: Role
+  refresh_token: String
 }
 
 type Query {

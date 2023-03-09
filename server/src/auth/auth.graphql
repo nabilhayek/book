@@ -7,13 +7,24 @@ type UserLoginResponse {
   id: String!
   name: String!
   email: String!
+  refresh_token: String
 }
 
 type LoginResponse {
   access_token: String!
+  refresh_token: String!
   user: UserLoginResponse!
+}
+
+input RefreshInput {
+  userId: String!
+}
+
+type RefreshResponse {
+  access_token: String!
 }
 
 type Mutation {
   login(loginInput: LoginInput!): LoginResponse!
+  refresh(refreshInput: RefreshInput!): RefreshResponse!
 }
