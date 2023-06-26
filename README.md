@@ -28,10 +28,30 @@ Install my-project with npm
   npm install my-project
   cd my-project
 ```
-    
+
 ## Inloggningsuppgifter
 
 För att logga in och testa applikationen kan du använda följande användare:
 
-```bash
-  email:
+Användare med administratörsbehörigheter: 
+```
+admin@example.com
+password
+```
+
+Användare med standardprivilegier:
+```
+user@example.com
+password
+```
+
+Du kan även skapa nya användare via gränssnittet som har standardprivilegier per standard.
+
+## Ändra användardata i databasen
+
+För att lätt experimentera och ändra datan i databasen kan du köra kommandot:
+```
+yarn start:prisma
+```
+
+Kommandot kommer att öppna ett gränssnitt via Prisma som tillåter dig att göra ändringar hos användare. T.ex ge användaren ny roll eller namn.
