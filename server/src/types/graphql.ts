@@ -39,6 +39,11 @@ export class UpdateUserInput {
     refresh_token?: Nullable<string>;
 }
 
+export class FindOneUserInput {
+    id?: Nullable<string>;
+    email?: Nullable<string>;
+}
+
 export class UserLoginResponse {
     id: string;
     name: string;
@@ -56,10 +61,16 @@ export class RefreshResponse {
     access_token: string;
 }
 
+export class ValidateTokenResponse {
+    valid: boolean;
+}
+
 export abstract class IMutation {
     abstract login(loginInput: LoginInput): LoginResponse | Promise<LoginResponse>;
 
     abstract refresh(refreshInput: RefreshInput): RefreshResponse | Promise<RefreshResponse>;
+
+    abstract validateToken(token: string): ValidateTokenResponse | Promise<ValidateTokenResponse>;
 
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
 
@@ -77,10 +88,16 @@ export class User {
     refresh_token?: Nullable<string>;
 }
 
-export abstract class IQuery {
-    abstract users(): Nullable<User>[] | Promise<Nullable<User>[]>;
+export class UserWithoutSensitiveData {
+    id: string;
+    name: string;
+    email: string;
+}
 
-    abstract user(id: string): Nullable<User> | Promise<Nullable<User>>;
+export abstract class IQuery {
+    abstract users(limit?: Nullable<number>): Nullable<UserWithoutSensitiveData>[] | Promise<Nullable<UserWithoutSensitiveData>[]>;
+
+    abstract user(findOneUserInput?: Nullable<FindOneUserInput>): Nullable<UserWithoutSensitiveData> | Promise<Nullable<UserWithoutSensitiveData>>;
 }
 
 type Nullable<T> = T | null;

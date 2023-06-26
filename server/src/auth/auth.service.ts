@@ -13,7 +13,9 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, password: string) {
-    const user = await this.userService.findOne(username);
+    const user = await this.userService.findOne({ email: username });
+
+    if (!user) return null;
 
     const isPasswordMatching = await bcrypt.compare(password, user.password);
 
@@ -28,7 +30,7 @@ export class AuthService {
   async generateAccessToken(user: UserLoginResponse) {
     const access_token = await this.jwtService.signAsync(
       { ...user, sub: user.id },
-      { expiresIn: '15m', secret: process.env.ACCESS_TOKEN_SECRET },
+      { expiresIn: '5s', secret: 'secret' },
     );
 
     return access_token;
@@ -37,7 +39,7 @@ export class AuthService {
   async generateRefreshToken(user: UserLoginResponse) {
     const refresh_token = await this.jwtService.signAsync(
       { ...user, sub: user.id },
-      { expiresIn: '7d', secret: process.env.REFRESH_TOKEN_SECRET },
+      { expiresIn: '7d', secret: 'refresh' },
     );
 
     const hashedRefreshToken = await bcrypt.hash(refresh_token, 10);
@@ -49,10 +51,23 @@ export class AuthService {
   }
 
   async decodeAccessToken(token: string) {
+    console.log('token', token);
     const decoded = await this.jwtService.verifyAsync(token, {
-      secret: process.env.ACCESS_TOKEN_SECRET,
+      secret: 'secret',
     });
     return decoded;
+  }
+
+  async validateToken(token: string) {
+    try {
+      const decoded = await this.decodeAccessToken(token);
+      const user = await this.userService.findOne({ id: decoded.id });
+
+      if (!user) return { valid: false };
+      return { valid: true };
+    } catch (error) {
+      return { valid: false };
+    }
   }
 
   async login(user: UserLoginResponse) {
@@ -66,7 +81,7 @@ export class AuthService {
   }
 
   async refreshAccessToken(userId: string, refreshToken: string) {
-    const user = await this.userService.findOne(userId);
+    const user = await this.userService.findOne({ id: userId });
     const isRefreshTokenMatching = await bcrypt.compare(
       refreshToken,
       user.refresh_token,

@@ -16,5 +16,9 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^7.6.0"
+  },
+  "dependencies": {
+    "@types/js-cookie": "^3.0.3",
+    "js-cookie": "^3.0.5"
   }
 }

@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserInput, UpdateUserInput } from 'src/types/graphql';
+import {
+  CreateUserInput,
+  UpdateUserInput,
+  FindOneUserInput,
+} from 'src/types/graphql';
 
 @Injectable()
 export class UserService {
@@ -15,9 +19,9 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  findOne(id: string) {
+  findOne(findOneUserInput: FindOneUserInput) {
     return this.prisma.user.findUnique({
-      where: { id },
+      where: findOneUserInput,
     });
   }
 

@@ -1,15 +1,17 @@
 import React from 'react'
+import CircularProgress from '@mui/material/CircularProgress';
 
 type Props = {
     onClick?: () => void,
     variant: 'outline' | 'solid' | 'text' | 'dashed' | 'link' | 'colored',
     size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl',
     disabled?: boolean,
+    loading?: boolean,
     className?: string,
     children?: React.ReactNode
 }
 
-const Button = ({onClick, variant, size = 'base', disabled, className, children}: Props) => {
+const Button = ({onClick, variant, size = 'base', disabled, className, children, loading}: Props) => {
   const fontSizes = {
     xs: 'text-xs',
     sm: 'text-sm',
@@ -35,8 +37,8 @@ const Button = ({onClick, variant, size = 'base', disabled, className, children}
     extraClasses = "bg-blue-500 text-white hover:bg-blue-400 focus:ring-blue-500 shadow-sm ring-offset-slate-50"
   }
   return (
-    <button disabled={disabled} className={`${baseClasses} ${extraClasses} ${disabled ? 'pointer-events-none opacity-50' : ''} ${className}`.trim()} onClick={onClick}>
-        {children}
+    <button disabled={disabled || loading} className={`${baseClasses} ${extraClasses} ${disabled || loading ? 'pointer-events-none opacity-50' : ''} ${className}`.trim()} onClick={onClick}>
+        {loading ? <div className="text-white w-24 h-24"><CircularProgress color='inherit' /></div> : children}
 </button>
 
   )

@@ -1,8 +1,15 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { CreateUserInput, Role, UpdateUserInput } from 'src/types/graphql';
+import {
+  CreateUserInput,
+  Role,
+  UpdateUserInput,
+  FindOneUserInput,
+} from 'src/types/graphql';
 import { UserService } from './user.service';
 import * as bcrypt from 'bcrypt';
 import { Roles } from 'src/auth/roles.decorator';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Resolver('User')
 export class UserResolver {
@@ -15,22 +22,25 @@ export class UserResolver {
   }
 
   @Query('users')
-  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.userService.findAll();
   }
 
   @Query('user')
-  findOne(@Args('id') id: string) {
-    return this.userService.findOne(id);
+  @UseGuards(JwtAuthGuard)
+  findOne(@Args('findOneUserInput') findOneUserInput: FindOneUserInput) {
+    return this.userService.findOne(findOneUserInput);
   }
 
   @Mutation('updateUser')
+  @UseGuards(JwtAuthGuard)
   update(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     return this.userService.update(updateUserInput.id, updateUserInput);
   }
 
   @Mutation('removeUser')
+  @Roles(Role.ADMIN)
   remove(@Args('id') id: string) {
     return this.userService.remove(id);
   }

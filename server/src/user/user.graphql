@@ -12,6 +12,12 @@ type User {
   refresh_token: String
 }
 
+type UserWithoutSensitiveData {
+  id: String!
+  name: String!
+  email: String!
+}
+
 input CreateUserInput {
   name: String!
   email: String!
@@ -29,9 +35,14 @@ input UpdateUserInput {
   refresh_token: String
 }
 
+input FindOneUserInput {
+  id: String
+  email: String
+}
+
 type Query {
-  users: [User]!
-  user(id: String!): User
+  users(limit: Int): [UserWithoutSensitiveData]!
+  user(findOneUserInput: FindOneUserInput): UserWithoutSensitiveData
 }
 
 type Mutation {
