@@ -30,7 +30,7 @@ export class AuthService {
   async generateAccessToken(user: UserLoginResponse) {
     const access_token = await this.jwtService.signAsync(
       { ...user, sub: user.id },
-      { expiresIn: '5s', secret: 'secret' },
+      { expiresIn: '1m', secret: 'secret' },
     );
 
     return access_token;
