@@ -29,3 +29,9 @@ Install my-project with npm
   cd my-project
 ```
     
+## Inloggningsuppgifter
+
+För att logga in och testa applikationen kan du använda följande användare:
+
+```bash
+  email:
